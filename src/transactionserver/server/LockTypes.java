@@ -1,4 +1,3 @@
-
 package transactionserver.comm;
 
 /**
@@ -7,11 +6,10 @@ package transactionserver.comm;
  *
  * @author Dr.-Ing. Wolf-Dieter Otte
  */
-public interface MessageTypes {
+public interface LockTypes {
 
-    public static int OPEN_TRANS = 1;
-    public static int CLOSE_TRANS = 2;
-    public static int READ = 3;
-    public static int WRITE= 4;
+    public static int READ = 1;
+    public static int WRITE = 2;
+    public static int NONE= 3;
 
 }

@@ -1,4 +1,4 @@
-package appserver.comm;
+package transactionserver.comm;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Class [Message] Defines a generic Message that has a message type and content.
  * Instances of this class can be sent over a network, using object streams.
  * Message types are defined in MessageTypes
- * 
+ *
  * @author Dr.-Ing. Wolf-Dieter Otte
  */
 public class Message implements MessageTypes, Serializable {
@@ -23,7 +23,7 @@ public class Message implements MessageTypes, Serializable {
 
     public Message() {
     }
-    
+
 // getter and setter methods for message type
     public void setType(int type) {
         this.type = type;

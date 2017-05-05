@@ -1,4 +1,4 @@
-package transactionserver.server;
+package transactionserver.locks;
 
 import java.util.ArrayList;
 

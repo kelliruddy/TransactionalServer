@@ -1,4 +1,4 @@
-package transactionserver.comm;
+package transactionserver.server;
 
 /**
  * Interface [MessageTypes] Defines the different message types used in the application.

@@ -27,9 +27,14 @@ public class DataManager{
     // some kind of locking...
     Account accnt = this.accounts.get(i);
 
+    int balance = null;
+
     lockManager.setLock(accnt, transId, READ);
-    int balance = accnt.getBalance();
-    lockManager.unLock(transId);
+    try {
+      int balance = accnt.getBalance();
+    } finally {
+      lockManager.unLock(transId);
+    }
 
     return balance;
   }
@@ -39,8 +44,12 @@ public class DataManager{
     Account account = accounts.get(i);
 
     lockManager.setLock(account, transId, WRITE);
-    account.setBalance(amount);
-    lockManager.unLock(transId);
+    try {
+      account.setBalance(amount);
+    } finally {
+      lockManager.unLock(transId);
+    }
+
     return balance;
   }
 }

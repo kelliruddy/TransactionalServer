@@ -2,20 +2,53 @@ package transactionserver.action;
 
 import java.util.Random;
 
-public class Transaction{
+public class Transaction extends Thread {
 
-  private int to;
-  private int from;
-  private int amount;
-  private int id;
+  ObjectInputStream readFromNet = null;
+  ObjectOutputStream writeToNet = null;
+  private Socket socket = null;
+  private Boolean running;
+  private Server server;
+  private Message message = null;
 
-  public Transaction(){
-    Random rand = new Random();
-    amount = rand.nextInt(100);
-    // randomly choose to and from accounts, making sure they are not the same
+  public Transaction(Socket socket, Server server){
+    this.server = server;
+    this.socket = socket;
+
+    this.running = true;
   }
 
-  public void setTransactionId(int id){
-    this.id = id;
-  }
+  @Override
+  public void run() {
+      // setting up object streams
+      try{
+        readFromNet = new ObjectInputStream(client.getInputStream());
+        writeToNet = new ObjectOutputStream(client.getOutputStream());
+      } catch (IOException ioe) {
+        System.err.println("[ServerThread.run] Object streams could not be initialized.");
+        ioe.printStackTrace();
+        System.exit(1);
+      }
+
+
+
+      // reading message
+      try {
+          message = (Message) readFromNet.readObject();
+      } catch (Exception e) {
+          System.err.println("[ServerThread.run] Message could not be read from object stream.");
+          e.printStackTrace();
+          System.exit(1);
+      }
+      TransactionInfo transactionInfo = null;
+      switch (message.getType()) {
+        case TRANSACTION:
+          transactionInfo = (TransactionInfo) message.getContent();
+          break;
+        default:
+          system.err.println("oops, wrong message type.");
+        }
+
+
+      }
 }

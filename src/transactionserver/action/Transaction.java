@@ -6,16 +6,17 @@ public class Transaction extends Thread {
 
   ObjectInputStream readFromNet = null;
   ObjectOutputStream writeToNet = null;
-  private Socket socket = null;
-  private Boolean running;
-  private Server server;
-  private Message message = null;
 
-  public Transaction(Socket socket, Server server){
+  private Socket socket = null;
+  private Server server = null;
+
+  public int transId;
+
+  public Transaction(Server server, Socket socket){
     this.server = server;
     this.socket = socket;
 
-    this.running = true;
+    transId = this.server.transactionManager.assignTransactionID();
   }
 
   @Override
@@ -30,8 +31,7 @@ public class Transaction extends Thread {
         System.exit(1);
       }
 
-
-
+      Message message = null;
       // reading message
       try {
           message = (Message) readFromNet.readObject();
@@ -47,7 +47,20 @@ public class Transaction extends Thread {
           break;
         default:
           system.err.println("oops, wrong message type.");
-        }
+      }
+      int accountFrom = transactionInfo.getFrom();
+      int accountTo   = transactionInfo.getTo();
+      int amount      = transactionInfo.getamount();
+
+      int firstAccountBalance = this.server.dataManager.read(transId, accountFrom);
+      int firstAccountnewBalance =  firstAccountBalance - amount;
+
+      this.server.DataManager.write(transId, accountFrom, firstAccountnewBalance);
+
+      int secondAccountBalance = this.server.dataManager.read(transId, accountTo);
+      int secondAccountNewBalance = secondAccountBalance + amount;
+
+      this .server.dataManager.write(transId, accountTo, secondAccountNewBalance);
 
 
       }

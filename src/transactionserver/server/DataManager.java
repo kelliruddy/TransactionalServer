@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public class DataManager{
 
   // created variable to hold accounts
-  static private ArrayList<Account> accounts;
+  private static ArrayList<Account> accounts;
+  private static LockManager lockManager;
 
   public DataManager(){
     accounts = new ArrayList<Account>();
+    lockManager = new LockManager();
   }
 
   public void createAccounts(int amount, int n) {
@@ -21,17 +23,24 @@ public class DataManager{
     }
   }
 
-  public int read(int i){
+  public int read(int transId, int i){
     // some kind of locking...
     Account accnt = this.accounts.get(i);
+
+    lockManager.setLock(accnt, transId, READ);
     int balance = accnt.getBalance();
+    lockManager.unLock(transId);
+
     return balance;
   }
 
-  public int write(int i, int amount){
+  public int write(int transId, int i, int amount){
     // some kind of locking...
     Account account = accounts.get(i);
+
+    lockManager.setLock(account, transId, WRITE);
     account.setBalance(amount);
-    return account.getBalance();
+    lockManager.unLock(transId);
+    return balance;
   }
 }

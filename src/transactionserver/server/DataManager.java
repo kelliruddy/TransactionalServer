@@ -25,33 +25,38 @@ public class DataManager implements LockTypes{
     }
   }
 
+  public ArrayList<Account> getAccounts() {
+    return accounts;
+  }
+
   public int read(int transId, int i){
     // some kind of locking...
+    System.out.println("[DataManager.read] Reading transID " + transId);
     Account accnt = this.accounts.get(i);
-
-    int balance;
-
+    int balance = 0;
     this.lockManager.setLock(accnt, transId, READ);
     try {
       balance = accnt.getBalance();
-    } finally {
-      lockManager.unLock(transId);
-    }
-
+    } catch (Exception e) {}
+    System.out.println("[DataManager.read] transID " + transId + " balance is " + balance);
     return balance;
+  }
+
+  public void commitTransaction(int transId) {
+    lockManager.unLock(transId);
   }
 
   public int write(int transId, int i, int amount){
     // some kind of locking...
+    System.out.println("[DataManager.read] Writing transID " + transId);
     Account account = accounts.get(i);
 
     lockManager.setLock(account, transId, WRITE);
     try {
       account.setBalance(amount);
-    } finally {
-      lockManager.unLock(transId);
-    }
+    } catch (Exception e) {}
 
+    System.out.println("[DataManager.read] transID " + transId + " amount is " + amount);
     return amount;
   }
 }

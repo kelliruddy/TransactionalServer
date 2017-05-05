@@ -26,8 +26,8 @@ public class TransactionClient extends Thread implements MessageTypes {
   public void run() {
       try {
         server = new Socket(this.host, this.port);
-        int aTo = ThreadLocalRandom.current().nextInt(0, 11);
-        int aFrom = ThreadLocalRandom.current().nextInt(0, 11);
+        int aTo = ThreadLocalRandom.current().nextInt(10);
+        int aFrom = ThreadLocalRandom.current().nextInt(10);
         int ammount = ThreadLocalRandom.current().nextInt(1, 11);
 
         TransactionInfo trans = new TransactionInfo(aTo, aFrom, ammount);
@@ -49,7 +49,7 @@ public class TransactionClient extends Thread implements MessageTypes {
 
   public static void main(String[] args) {
 
-      for(int i = 0; i < 10; i++){
+      for(int i = 0; i < 4; i++){
           (new TransactionClient(args[0],i)).start();
       }
   }

@@ -24,7 +24,7 @@ public class LockManager implements LockTypes{
       // find the lock associated with object
       foundLock = theLocks.get(object);
       // if there isn’t one
-      if (theLocks == null){
+      if (foundLock == null){
         // create new lock
         foundLock = new Lock(object);
         // add to hashmap
@@ -38,14 +38,14 @@ public class LockManager implements LockTypes{
   public synchronized void unLock(int transId) {
     Lock tempLock;
     ArrayList<Integer> TIDs;
-    Iterator iterator = locks.entrySet().iterator();
+    Iterator iterator = theLocks.entrySet().iterator();
     while (iterator.hasNext()){
         tempLock = (Lock) ((HashMap.Entry) iterator.next()).getValue();
         TIDs = tempLock.getTIDsHolders();
-        if ( TIDs.contains(TID) ){
-            tempLock.release(TID);
+        if ( TIDs.contains(transId) ){
+            tempLock.release(transId);
         }
-        iterator.remove()
+        iterator.remove();
     }
   }
 }

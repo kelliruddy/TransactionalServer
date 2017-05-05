@@ -6,10 +6,12 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import transactionserver.comm.Message;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import transactionserver.server.Server;
 import transactionserver.comm.TransactionInfo;
 import transactionserver.comm.MessageTypes;
+import transactionserver.server.Account;
 
 public class Transaction extends Thread implements MessageTypes {
 
@@ -26,6 +28,7 @@ public class Transaction extends Thread implements MessageTypes {
     this.client = socket;
 
     transId = this.server.transactionManager.assignTransactionID();
+    System.out.println("[Transaction.init] Created transaction with ID: " + transId);
   }
 
   @Override
@@ -59,7 +62,7 @@ public class Transaction extends Thread implements MessageTypes {
       }
       int accountFrom = transactionInfo.getFrom();
       int accountTo   = transactionInfo.getTo();
-      int amount      = transactionInfo.getamount();
+      int amount      = transactionInfo.getAmount();
 
       int firstAccountBalance = this.server.dataManager.read(transId, accountFrom);
       int firstAccountnewBalance =  firstAccountBalance - amount;
@@ -70,6 +73,23 @@ public class Transaction extends Thread implements MessageTypes {
       int secondAccountNewBalance = secondAccountBalance + amount;
 
       int result = this.server.dataManager.write(transId, accountTo, secondAccountNewBalance);
-      writeToNet.writeObject(result);
+      this.server.dataManager.commitTransaction(transId);
+
+      try {
+        writeToNet.writeObject(result);
+      } catch (IOException ioe) {
+
+      }
+
+      int total = 0;
+      ArrayList<Account> accts = this.server.dataManager.getAccounts();
+
+      for (int i = 0; i < accts.size(); i++ ) {
+        total += accts.get(new Integer(i)).getBalance();
+        System.out.println("Account " + i + ": " + accts.get(new Integer(i)).getBalance());
+      }
+
+      System.out.println("Total: " + total);
+
       }
 }

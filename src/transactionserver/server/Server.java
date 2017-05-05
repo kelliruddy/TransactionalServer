@@ -1,6 +1,7 @@
 package transactionserver.server;
 
 import transactionserver.comm.Message;
+import transactionserver.action.Transaction;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,7 +23,6 @@ public class Server {
       dataManager = new DataManager();
       dataManager.createAccounts(10, 10);
 
-      int serverPort = 23657;
       try{
         serverSocket = new ServerSocket(serverPort);
       } catch (Exception e) {
@@ -42,8 +42,10 @@ public class Server {
           ioe.printStackTrace();
           System.exit(1);
         }
+        System.out.println("[Server.run] Transaction started.");
       }
     }
+
     public static void main(String[] args) {
         Server server = null;
 

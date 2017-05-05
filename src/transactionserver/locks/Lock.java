@@ -31,8 +31,12 @@ public class Lock implements LockTypes{
     }
   }
 
+  public ArrayList<Integer> getTIDsHolders() {
+    return holders;
+  }
+
   public synchronized void release(int transId){
-    holders.remove(transId); // remove this holder // set locktype to none
+    holders.remove(new Integer(transId)); // remove this holder // set locktype to none
     if (holders.isEmpty()){
       curLockType = NONE;
     }

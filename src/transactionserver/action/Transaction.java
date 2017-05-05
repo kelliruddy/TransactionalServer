@@ -59,7 +59,7 @@ public class Transaction extends Thread implements MessageTypes {
       }
       int accountFrom = transactionInfo.getFrom();
       int accountTo   = transactionInfo.getTo();
-      int amount      = transactionInfo.getamount();
+      int amount      = transactionInfo.getAmount();
 
       int firstAccountBalance = this.server.dataManager.read(transId, accountFrom);
       int firstAccountnewBalance =  firstAccountBalance - amount;
@@ -70,6 +70,13 @@ public class Transaction extends Thread implements MessageTypes {
       int secondAccountNewBalance = secondAccountBalance + amount;
 
       int result = this.server.dataManager.write(transId, accountTo, secondAccountNewBalance);
-      writeToNet.writeObject(result);
+      try{
+        writeToNet.writeObject(result);
+      }
+      catch (IOException ioe) {
+        System.err.println("[ServerThread.run] Object streams could not be initialized.");
+        ioe.printStackTrace();
+        System.exit(1);
+      }
       }
 }

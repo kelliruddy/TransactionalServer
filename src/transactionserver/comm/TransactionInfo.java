@@ -9,6 +9,11 @@ public class TransactionInfo implements Serializable {
   private int accountTo   = 0;
   private int amount      = 0;
 
+  public void TransactionInfo(int a, int b, int c) {
+    accountFrom = a;
+    accountTo   = b;
+    ammount     = c;
+  }
   public int getFrom() {
     return this.accountFrom;
   }

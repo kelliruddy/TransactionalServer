@@ -60,8 +60,7 @@ public class Transaction extends Thread {
       int secondAccountBalance = this.server.dataManager.read(transId, accountTo);
       int secondAccountNewBalance = secondAccountBalance + amount;
 
-      this .server.dataManager.write(transId, accountTo, secondAccountNewBalance);
-
-
+      int restult = this.server.dataManager.write(transId, accountTo, secondAccountNewBalance);
+      writeToNet.writeObject(result);
       }
 }

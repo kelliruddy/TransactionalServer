@@ -17,7 +17,7 @@ public class TransactionInfo implements Serializable {
     return this.accountTo;
   }
 
-  public int getamount() {
+  public int getAmount() {
     return this.amount;
   }
 

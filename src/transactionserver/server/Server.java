@@ -13,13 +13,13 @@ import java.util.Properties;
 
 public class Server {
 
-    static TransactionManager transactionManager = null;
-    static LockManager        LockManager = null;
-    static ServerSocket       serverSocket = null;
+    static DataManager dataManager    = null;
+    static ServerSocket serverSocket  = null;
 
     public Server(int serverPort) {
 
-      transactionManager = new TransactionManager();
+      dataManager = new DataManager();
+      dataManager.createAccounts(10, 10);
 
       int serverPort;
       try{
@@ -35,7 +35,7 @@ public class Server {
     public void run() {
       while (true) {
         try {
-          (new ServerThread(serverSocket.accept())).start();
+          (new Transaction(this, serverSocket.accept())).start();
         } catch (IOException ioe) {
           System.err.println("[Server.run] ServerThread could not be initialized.");
           ioe.printStackTrace();
@@ -43,50 +43,6 @@ public class Server {
         }
       }
     }
-
-    // objects of this helper class communicate with clients
-    private class ServerThread extends Thread {
-
-        Socket client = null;
-        ObjectInputStream readFromNet = null;
-        ObjectOutputStream writeToNet = null;
-        Message message = null;
-
-        private ServerThread(Socket client) {
-            this.client = client;
-        }
-
-        @Override
-        public void run() {
-
-            try {
-              writeToNet = new ObjectOutputStream(client.getOutputStream());
-              readFromNet = new ObjectInputStream(client.getInputStream());
-            } catch (IOException ioe) {
-              System.err.println("[ServerThread.run] Object streams could not be initialized.");
-              ioe.printStackTrace();
-              System.exit(1);
-            }
-
-            try {
-                message = (Message) readFromNet.readObject();
-            } catch (Exception e) {
-                System.err.println("[ServerThread.run] Message could not be read from object stream.");
-                e.printStackTrace();
-                System.exit(1);
-            }
-
-            switch (message.getType()) {
-                case READ:
-                    break;
-                case WRITE:
-                    break;
-                default:
-                    System.err.println("[ServerThread.run] Warning: Message type not implemented");
-            }
-        }
-    }
-
     public static void main(String[] args) {
         Server server = null;
 

@@ -11,7 +11,7 @@ public class Transaction extends Thread {
   private Server server;
   private Message message = null;
 
-  public Transaction(Socket socket, Server server){
+  public Transaction(Server server, Socket socket){
     this.server = server;
     this.socket = socket;
 
@@ -29,9 +29,6 @@ public class Transaction extends Thread {
         ioe.printStackTrace();
         System.exit(1);
       }
-
-
-
       // reading message
       try {
           message = (Message) readFromNet.readObject();
@@ -47,7 +44,20 @@ public class Transaction extends Thread {
           break;
         default:
           system.err.println("oops, wrong message type.");
-        }
+      }
+      int accountFrom = transactionInfo.getFrom();
+      int accountTo   = transactionInfo.getTo();
+      int amount      = transactionInfo.getamount();
+
+      int firstAccountBalance = this.server.dataManager.read(accountFrom);
+      int firstAccountnewBalance =  firstAccountBalance - amount;
+
+      this.server.DataManager.write(accountFrom, firstAccountnewBalance);
+
+      int secondAccountBalance = this.server.dataManager.read(accountTo);
+      int secondAccountNewBalance = secondAccountBalance + amount;
+
+      this .server.dataManager.write(accountTo, secondAccountNewBalance);
 
 
       }

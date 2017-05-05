@@ -14,7 +14,8 @@ import java.util.Properties;
 public class Server {
 
     static TransactionManager transactionManager = null;
-    static ServerSocket serverSocket = null;
+    static LockManager        LockManager = null;
+    static ServerSocket       serverSocket = null;
 
     public Server(int serverPort) {
 

@@ -2,24 +2,17 @@ package transactionserver.server;
 
 public class Account {
 
-  private int money;
-  private int id;
+  private int balance = null;
 
-  public Account(){}
-
-  public void setBalance(int newMoney){
-    money = newMoney;
+  public void Account(int amount){
+    balance = amount;
+  }
+  public int readBalance(){
+    return balance;
   }
 
-  public int getBalance(){
-    return money;
+  public void writeBalance( int amount) {
+    balance = amount;
   }
 
-  public void setId(int id){
-    this.id = id;
-  }
-
-  public int getId(){
-    return id;
-  }
 }

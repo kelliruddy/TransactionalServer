@@ -1,9 +1,17 @@
 package transactionserver.client;
+
 import java.util.concurrent.ThreadLocalRandom;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import transactionserver.comm.Message;
+import transactionserver.comm.TransactionInfo;
+import transactionserver.comm.MessageTypes;
+import java.net.Socket;
 
 public class TransactionClient extends Thread implements MessageTypes {
 
-  Socket socket;
+  Socket server;
   String host;
   int port = 23657;
   int i;
@@ -17,7 +25,7 @@ public class TransactionClient extends Thread implements MessageTypes {
 
   public void run() {
       try {
-        socket = new Socket(this.host, this.port);
+        server = new Socket(this.host, this.port);
         int aTo = ThreadLocalRandom.current().nextInt(0, 11);
         int aFrom = ThreadLocalRandom.current().nextInt(0, 11);
         int ammount = ThreadLocalRandom.current().nextInt(1, 11);
@@ -41,8 +49,8 @@ public class TransactionClient extends Thread implements MessageTypes {
 
   public static void main(String[] args) {
 
-      for(int i = 0; i < 46; i++){
-          (new FibonacciClient(args[0],i)).start();
+      for(int i = 0; i < 10; i++){
+          (new TransactionClient(args[0],i)).start();
       }
   }
 }

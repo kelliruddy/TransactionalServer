@@ -1,15 +1,17 @@
 package transactionserver.server;
 
 import java.util.ArrayList;
+import transactionserver.locks.LockTypes;
+import transactionserver.locks.LockManager;
 
 // This class is created to actually deal with the accounts, creating and accessing them
 // Still needs to implement locking...
 
-public class DataManager{
+public class DataManager implements LockTypes{
 
   // created variable to hold accounts
-  private static ArrayList<Account> accounts;
-  private static LockManager lockManager;
+  private ArrayList<Account> accounts;
+  private LockManager lockManager;
 
   public DataManager(){
     accounts = new ArrayList<Account>();
@@ -27,11 +29,11 @@ public class DataManager{
     // some kind of locking...
     Account accnt = this.accounts.get(i);
 
-    int balance = null;
+    int balance;
 
-    lockManager.setLock(accnt, transId, READ);
+    this.lockManager.setLock(accnt, transId, READ);
     try {
-      int balance = accnt.getBalance();
+      balance = accnt.getBalance();
     } finally {
       lockManager.unLock(transId);
     }
@@ -50,6 +52,6 @@ public class DataManager{
       lockManager.unLock(transId);
     }
 
-    return balance;
+    return amount;
   }
 }

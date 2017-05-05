@@ -1,8 +1,6 @@
 package transactionserver.server;
 
 import transactionserver.comm.Message;
-import static transactionserver.comm.MessageTypes.READ;
-import static transactionserver.comm.MessageTypes.WRITE;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,7 +18,7 @@ public class Server {
     public Server(int serverPort) {
 
       transactionManager = new TransactionManager();
-      
+
       dataManager = new DataManager();
       dataManager.createAccounts(10, 10);
 
@@ -54,7 +52,6 @@ public class Server {
         } else {
           server = new Server(23657);
         }
-
         server.run();
     }
 }

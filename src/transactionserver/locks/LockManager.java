@@ -1,8 +1,10 @@
-package transactionserver.server;
+package transactionserver.locks;
 
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
+import transactionserver.server.Account;
+
 
 public class LockManager implements LockTypes{
 
@@ -11,10 +13,10 @@ public class LockManager implements LockTypes{
   public LockManager(){
 
     theLocks = new HashMap<Account, Lock>();
-    
+
   }
 
-  public void setLock(Object object, int transId, int lockType){
+  public void setLock(Account object, int transId, int lockType){
 
     Lock foundLock;
 

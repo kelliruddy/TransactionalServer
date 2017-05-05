@@ -1,4 +1,4 @@
-package transactionserver.server;
+package transactionserver.locks;
 
 /**
  * Interface [MessageTypes] Defines the different message types used in the application.

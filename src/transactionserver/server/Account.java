@@ -2,11 +2,12 @@ package transactionserver.server;
 
 public class Account {
 
-  private int balance = null;
+  private int balance;
 
   public void Account(int amount){
     writeBalance(amount);
   }
+  
   public int readBalance(){
     return balance;
   }

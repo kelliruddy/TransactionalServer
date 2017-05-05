@@ -1,4 +1,4 @@
-package transactionserver.server;
+package transactionserver.locks;
 
 import java.util.ArrayList;
 
@@ -23,10 +23,8 @@ public class Lock implements LockTypes{
     if (holders.isEmpty()) { // no TIDs hold lock holders.addElement(trans);
       holders.add(transId);
       curLockType = lockType;
-    }else if (!holders.isEmpty()){
-      if (!holders.contains(transId)){
+    }else if (!holders.contains(transId)){
         holders.add(transId);
-      }
     }else if (!holders.contains(transId) && curLockType == READ && lockType == WRITE) {
       curLockType = lockType;
       System.out.println("Lock promoted!");

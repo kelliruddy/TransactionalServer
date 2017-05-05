@@ -11,27 +11,26 @@ public class DataManager{
   static private ArrayList<Account> accounts;
 
   public DataManager(){
-    accounts = new ArrayList<>();
+    accounts = new ArrayList<Account>();
+  }
 
-    // creating 10 accounts
-    for (int i = 0; i < 10; i++){
-      Account newAccount = new Account();
-      newAccount.setBalance(10);
-      newAccount.setId(i);
-      accounts.add(newAccount);
+  public void createAccounts(int amount, int n) {
+    for(int i = 0; i < n; i++){
+      Account accnt = new Account(amount);
+      this.accounts.add(accnt);
     }
   }
 
-  public int read(int accountId){
+  public int read(int i){
     // some kind of locking...
-    Account account = accounts.get(accountId);
-    int balance = account.getBalance();
+    Account accnt = this.accounts.get(i);
+    int balance = accnt.getBalance();
     return balance;
   }
 
-  public int write(int accountId, int amount){
+  public int write(int i, int amount){
     // some kind of locking...
-    Account account = accounts.get(accountId);
+    Account account = accounts.get(i);
     account.setBalance(amount);
     return account.getBalance();
   }

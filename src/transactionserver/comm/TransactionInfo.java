@@ -7,7 +7,7 @@ public class TransactionInfo implements Serializable {
 
   int accountFrom = 0;
   int accountTo   = 0;
-  int ammount     = 0;
+  int amount      = 0;
 
   public int getFrom() {
     return this.accountFrom;
@@ -17,9 +17,8 @@ public class TransactionInfo implements Serializable {
     return this.accountTo;
   }
 
-  public int getAmmount() {
-    return this.ammount;
+  public int getamount() {
+    return this.amount;
   }
-
 
 }

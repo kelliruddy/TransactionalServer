@@ -5,7 +5,7 @@ public class Account {
   private int balance = null;
 
   public void Account(int amount){
-    balance = amount;
+    writeBalance(amount);
   }
   public int readBalance(){
     return balance;

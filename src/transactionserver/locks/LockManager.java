@@ -36,6 +36,16 @@ public class LockManager implements LockTypes{
 
   // synchronize this one because we want to remove all entries
   public synchronized void unLock(int transId) {
-    // loop through locks and unlocking those on transId
+    Lock tempLock;
+    ArrayList<Integer> TIDs;
+    Iterator iterator = locks.entrySet().iterator();
+    while (iterator.hasNext()){
+        tempLock = (Lock) ((HashMap.Entry) iterator.next()).getValue();
+        TIDs = tempLock.getTIDsHolders();
+        if ( TIDs.contains(TID) ){
+            tempLock.release(TID);
+        }
+        iterator.remove()
+    }
   }
 }

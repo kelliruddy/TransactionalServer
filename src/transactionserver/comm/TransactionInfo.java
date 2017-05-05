@@ -5,9 +5,9 @@ import java.io.Serializable;
 
 public class TransactionInfo implements Serializable {
 
-  int accountFrom = 0;
-  int accountTo   = 0;
-  int amount      = 0;
+  private int accountFrom = 0;
+  private int accountTo   = 0;
+  private int amount      = 0;
 
   public int getFrom() {
     return this.accountFrom;

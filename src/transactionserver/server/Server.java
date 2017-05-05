@@ -13,15 +13,18 @@ import java.util.Properties;
 
 public class Server {
 
-    static DataManager dataManager    = null;
-    static ServerSocket serverSocket  = null;
+    public static TransactionManager transactionManager = null;
+    public static DataManager dataManager               = null;
+    static ServerSocket serverSocket                    = null;
 
     public Server(int serverPort) {
 
+      transactionManager = new TransactionManager();
+      
       dataManager = new DataManager();
       dataManager.createAccounts(10, 10);
 
-      int serverPort;
+      int serverPort = 23657;
       try{
         serverSocket = new ServerSocket(serverPort);
       } catch (Exception e) {

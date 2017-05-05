@@ -10,7 +10,7 @@ public class LockManager implements LockTypes{
 
   public LockManager(){
 
-    theLocks = new HashMap();
+    theLocks = new HashMap<Account, Lock>();
     
   }
 

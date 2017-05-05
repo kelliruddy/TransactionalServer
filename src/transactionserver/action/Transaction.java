@@ -1,20 +1,29 @@
 package transactionserver.action;
 
 import java.util.Random;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import transactionserver.comm.Message;
+import java.io.IOException;
 
-public class Transaction extends Thread {
+import transactionserver.server.Server;
+import transactionserver.comm.TransactionInfo;
+import transactionserver.comm.MessageTypes;
+
+public class Transaction extends Thread implements MessageTypes {
 
   ObjectInputStream readFromNet = null;
   ObjectOutputStream writeToNet = null;
 
-  private Socket socket = null;
+  private Socket client = null;
   private Server server = null;
 
   public int transId;
 
   public Transaction(Server server, Socket socket){
     this.server = server;
-    this.socket = socket;
+    this.client = socket;
 
     transId = this.server.transactionManager.assignTransactionID();
   }
@@ -46,7 +55,7 @@ public class Transaction extends Thread {
           transactionInfo = (TransactionInfo) message.getContent();
           break;
         default:
-          system.err.println("oops, wrong message type.");
+          System.err.println("oops, wrong message type.");
       }
       int accountFrom = transactionInfo.getFrom();
       int accountTo   = transactionInfo.getTo();
@@ -55,12 +64,12 @@ public class Transaction extends Thread {
       int firstAccountBalance = this.server.dataManager.read(transId, accountFrom);
       int firstAccountnewBalance =  firstAccountBalance - amount;
 
-      this.server.DataManager.write(transId, accountFrom, firstAccountnewBalance);
+      this.server.dataManager.write(transId, accountFrom, firstAccountnewBalance);
 
       int secondAccountBalance = this.server.dataManager.read(transId, accountTo);
       int secondAccountNewBalance = secondAccountBalance + amount;
 
-      int restult = this.server.dataManager.write(transId, accountTo, secondAccountNewBalance);
+      int result = this.server.dataManager.write(transId, accountTo, secondAccountNewBalance);
       writeToNet.writeObject(result);
       }
 }

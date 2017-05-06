@@ -43,12 +43,13 @@ public class DataManager implements LockTypes{
   }
 
   public void commitTransaction(int transId) {
+    System.out.println("[DataManager.unlock] Unlocking transID " + transId);
     lockManager.unLock(transId);
   }
 
   public int write(int transId, int i, int amount){
     // some kind of locking...
-    System.out.println("[DataManager.read] Writing transID " + transId);
+    System.out.println("[DataManager.write] Writing transID " + transId);
     Account account = accounts.get(i);
 
     lockManager.setLock(account, transId, WRITE);
@@ -56,7 +57,7 @@ public class DataManager implements LockTypes{
       account.setBalance(amount);
     } catch (Exception e) {}
 
-    System.out.println("[DataManager.read] transID " + transId + " amount is " + amount);
+    System.out.println("[DataManager.write] transID " + transId + " amount is " + amount);
     return amount;
   }
 }

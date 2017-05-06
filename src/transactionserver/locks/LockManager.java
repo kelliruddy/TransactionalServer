@@ -23,6 +23,7 @@ public class LockManager implements LockTypes{
     synchronized(this){
       // find the lock associated with object
       foundLock = theLocks.get(object);
+
       // if there isn’t one
       if (foundLock == null){
         // create new lock

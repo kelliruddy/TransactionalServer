@@ -48,8 +48,11 @@ public class Lock implements LockTypes{
       // no conflict obviously
       return false;
     }
-    else if (holders.size() == 1 && newLockType == READ){
+    else if (holders.size() == 1 && newLockType == READ) {
       // only 1 holder, so can be no conflict
+      return false;
+    }
+    else if (holders.size() == 1 && newLockType == WRITE) {
       return false;
     }
     else if (curLockType == READ && newLockType == READ){

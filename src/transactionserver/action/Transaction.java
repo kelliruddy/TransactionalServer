@@ -73,6 +73,9 @@ public class Transaction extends Thread implements MessageTypes {
       int secondAccountNewBalance = secondAccountBalance + amount;
 
       int result = this.server.dataManager.write(transId, accountTo, secondAccountNewBalance);
+
+      int total = 0;
+
       this.server.dataManager.commitTransaction(transId);
 
       try {
@@ -80,16 +83,6 @@ public class Transaction extends Thread implements MessageTypes {
       } catch (IOException ioe) {
 
       }
-
-      int total = 0;
-      ArrayList<Account> accts = this.server.dataManager.getAccounts();
-
-      for (int i = 0; i < accts.size(); i++ ) {
-        total += accts.get(new Integer(i)).getBalance();
-        System.out.println("Account " + i + ": " + accts.get(new Integer(i)).getBalance());
-      }
-
-      System.out.println("Total: " + total);
 
       }
 }

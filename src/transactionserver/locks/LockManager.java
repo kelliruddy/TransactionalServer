@@ -1,52 +1,76 @@
-package transactionserver.locks;
-
+package transactionalserver.lock;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.Iterator;
-import transactionserver.server.Account;
+import java.util.Properties;
 
-
-public class LockManager implements LockTypes{
-
-  private HashMap<Account, Lock> theLocks;
-
-  public LockManager(){
-
-    theLocks = new HashMap<Account, Lock>();
-
-  }
-
-  public void setLock(Account object, int transId, int lockType){
-
-    Lock foundLock;
-
-    synchronized(this){
-      // find the lock associated with object
-      foundLock = theLocks.get(object);
-
-      // if there isn’t one
-      if (foundLock == null){
-        // create new lock
-        foundLock = new Lock(object);
-        // add to hashmap
-        theLocks.put(object, foundLock);
-      }
-    }
-    foundLock.acquire(transId, lockType);
-  }
-
-  // synchronize this one because we want to remove all entries
-  public synchronized void unLock(int transId) {
-    Lock tempLock;
-    ArrayList<Integer> TIDs;
-    Iterator iterator = theLocks.entrySet().iterator();
-    while (iterator.hasNext()){
-        tempLock = (Lock) ((HashMap.Entry) iterator.next()).getValue();
-        TIDs = tempLock.getTIDsHolders();
-        if ( TIDs.contains(transId) ){
-            tempLock.release(transId);
+import transactionalserver.account.Account;
+import transactionalserver.lock.LockType;
+import transactionalserver.transaction.Transaction;
+       
+/**
+*  The LockManager handles and initializes all of the Lock objects
+*
+*  It will acquire and release locks for the AccountManager.
+*  Unlocking will be done in the TransactionsMaangerWorker.
+*/
+public class LockManager{
+   private boolean applyLocking;
+   //Some kind of data structure to hold locks info
+   private HashMap<Account, Lock> locks;
+   
+    /**
+     *
+     * @param clientProperties
+     */
+    public LockManager(String clientProperties){
+       // get configurations from client properties file
+       Properties prop = new Properties();
+       try{
+           prop.load(new FileInputStream(clientProperties));
+       } catch(IOException e){
+           System.out.println(e);
+       }
+       
+       applyLocking =  Boolean.valueOf(prop.getProperty("applyLocking"));
+       //initialize structure holding locks
+       locks = new HashMap<>();  
+   }
+   /*
+   Sets a lock on a object
+   */
+    public void lock(Account account, Transaction transaction, LockType lockType){
+        
+        Lock found;
+        
+        // prevents race conditions
+        synchronized(this){
+            if (!applyLocking){
+            return;
+            }
+            //find the lock associated with the specific account
+            found = locks.get(account);
+            
+            if(found == null){
+               found = new Lock(account);
+               locks.put(account, found);
+            } 
         }
-        iterator.remove();
+        found.acquire(transaction, lockType);
     }
-  }
+   
+   /*
+   Unlocks a lock on a transaction
+   */
+   public void unLock(Transaction transaction){
+       if (!applyLocking){
+           return;
+       }
+       Iterator<Lock> lockIterator = transaction.getLocks().listIterator();
+       while (lockIterator.hasNext()){
+           Lock currentLock = lockIterator.next();
+           currentLock.release(transaction);
+       }
+   }
 }
